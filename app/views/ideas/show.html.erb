@@ -1,0 +1,68 @@
+<h1><%= @i.title %></h1>
+<p><%= @i.body %></p>
+<% if @i.image %>
+  <img src=<%= @i.image %> height="100" width="160">
+<% end %>
+<p>Created by: <%= @i.user.first_name %> <%= @i.user.last_name %></p>
+<p>Members: <%= "None" unless @members.present? %></p>
+<ul>
+<% @members.each do |member| %>
+  <li><%= "#{member.first_name} #{member.last_name}" %></li>
+<% end %>
+</ul>
+
+<% if can? :edit, @i %>
+  <%= link_to "Attach Image", edit_idea_images_path(@i), remote: true, class: "btn btn-info btn-sm" %>
+  <%= link_to "Remove Image", delete_idea_images_path(@i), {method: :delete, class: "btn btn-danger btn-sm"} if @i.image%>
+  <%= link_to "Edit", edit_idea_path(@i), remote: true, class: "btn btn-info btn-sm" %>
+<% end %>
+<% if can? :destroy, @i %>
+  <%= link_to "Delete", idea_path(@i), {method: :delete, class: "btn btn-danger btn-sm", data: {confirm: "Are you sure you want to delete this idea?"}}%>
+<% end %>
+
+<% if !(can? :edit, @i) %>
+  <% if user_signed_in? && @i.joined_by?(current_user) %>
+    <%= link_to "Unjoin", idea_member_path(@i, @i.join_for(current_user)),
+                      method: :delete, class: "btn btn-primary btn-sm" %>
+  <% else %>
+    <%= link_to "Join", idea_members_path(@i), class: "btn btn-primary btn-sm",
+                        method: :post %>
+  <% end %>
+<% end %>
+
+<% if user_signed_in? && @i.liked_by?(current_user) %>
+  <%= link_to fa_icon("thumbs-up"), idea_like_path(@i, @i.like_for(current_user)),
+                    method: :delete, class: "icon-big" %>
+<% else %>
+  <%= link_to fa_icon("thumbs-o-up"), idea_likes_path(@i), class: "icon-big",
+                      method: :post %>
+<% end %>
+
+<div id="idea_form">
+</div>
+
+<div id="idea_image_form">
+</div>
+
+<h2>Add a Comment</h2>
+<%= @comment.errors.full_messages.join(", ") %>
+<%= form_for [@i, @comment] do |f| %>
+  <div class="form-group">
+    <%= f.label :body %>
+    <%= f.text_area :body, value: @comment.body, class: "form-control" %>
+  </div>
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>
+
+<h2>Comments</h2>
+<% @comments.each do |comment| %>
+  <div class="well">
+    <%= comment.body %>
+    <% if can? :destroy, comment %>
+      <%= link_to "Delete", idea_comment_path(@i, comment), method: :delete, class: "btn btn-danger pull-right", data: {confirm: "Are you sure?"}%>
+    <% end %>
+    <div class="pull-right owned">
+      <%= comment.user.first_name %> <%= comment.user.last_name %>
+    </div>
+  </div>
+<% end %>

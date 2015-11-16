@@ -1,0 +1,19 @@
+<h1>All Ideas</h1>
+<%= link_to("New Idea", new_idea_path, remote: true, class: "btn btn-primary") %>
+
+<div id="idea_form">
+</div>
+
+<div id="idea_list">
+  <% @ideas.each do |i| %>
+    <div class="well">
+        <%= i.title %>
+        <%= link_to "Show", idea_path(i), class: "btn btn-primary btn-sm pull-right" %>
+        <% if can? :manage, i %>
+          <div class="pull-right owned">Owned</div>
+        <% end %>
+        <div class="pull-right owned">Likes: <%= i.likes.count %></div>
+        <div class="pull-right owned">Members: <%= i.members.count %></div>
+    </div>
+  <% end %>
+</div>

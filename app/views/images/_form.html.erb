@@ -1,0 +1,8 @@
+<%= form_tag idea_images_path do %>
+  <div class="form-group">
+    <%= label_tag :image %>
+    <%= url_field_tag :image, @i.image ? @i.image : "", class: "form-control" %>
+  </div>
+
+  <%= submit_tag "Attach Image", class: "btn btn-primary"%>
+<% end %>

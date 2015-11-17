@@ -3,9 +3,9 @@ class MembersController < ApplicationController
 
   # POST /ideas/12/members
   def create
-    redirect_to idea_path(@i), alert: "Access denied." and return if can? :edit, @i
     member          = Member.new
     idea      = Idea.find params[:idea_id]
+    redirect_to idea_path(idea), alert: "Access denied." and return if can? :edit, idea
     member.idea = idea
     member.user     = current_user
     if member.save
@@ -17,8 +17,8 @@ class MembersController < ApplicationController
   end
 
   def destroy
-    redirect_to idea_path(@i), alert: "Access denied." and return if can? :edit, @i
     idea = Idea.find params[:idea_id]
+    redirect_to idea_path(idea), alert: "Access denied." and return if can? :edit, idea
     member     = current_user.members.find params[:id]
     member.destroy
     redirect_to idea_path(idea), notice: "Unjoined!"

@@ -1,8 +1,10 @@
 <h1><%= @i.title %></h1>
 <p><%= @i.body %></p>
-<% if @i.image %>
-  <img src=<%= @i.image %> height="100" width="160">
+<% if @i.avatar.present? %>
+  <!-- <img src=<%#= @i.image %> height="100" width="160"> -->
+  <%= image_tag @i.avatar.url(:medium) %>
 <% end %>
+
 <p>Created by: <%= @i.user.first_name %> <%= @i.user.last_name %></p>
 <p>Members: <%= "None" unless @members.present? %></p>
 <ul>
@@ -13,7 +15,7 @@
 
 <% if can? :edit, @i %>
   <%= link_to "Attach Image", edit_idea_images_path(@i), remote: true, class: "btn btn-info btn-sm" %>
-  <%= link_to "Remove Image", delete_idea_images_path(@i), {method: :delete, class: "btn btn-danger btn-sm"} if @i.image%>
+  <%= link_to "Remove Image", delete_idea_images_path(@i), {method: :delete, class: "btn btn-danger btn-sm"} if @i.avatar.present?%>
   <%= link_to "Edit", edit_idea_path(@i), remote: true, class: "btn btn-info btn-sm" %>
 <% end %>
 <% if can? :destroy, @i %>

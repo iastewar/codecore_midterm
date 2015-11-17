@@ -8,7 +8,7 @@ class ImagesController < ApplicationController
 
   def update
     redirect_to idea_path(@i), alert: "Access denied." and return unless can? :update, @i
-    if @i.update image: params[:image]
+    if @i.update idea_params
       redirect_to(idea_path(@i))
     else
       render :edit
@@ -17,14 +17,14 @@ class ImagesController < ApplicationController
 
   def destroy
     redirect_to idea_path(@i), alert: "Access denied." and return unless can? :update, @i
-    @i.image = nil
+    @i.avatar = nil
     @i.save
     flash[:notice] = "Image deleted successfully"
     redirect_to idea_path(@i)
   end
 
   def idea_params
-    params.require(:idea).permit([:image])
+    params.require(:idea).permit([:image, :avatar])
   end
 
   def find_idea

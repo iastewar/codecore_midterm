@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     resources :comments
     resources :images, only: [] do
       get :edit, on: :collection
-      post :update, on: :collection
+      patch :update, on: :collection
       delete :destroy, on: :collection, as: :delete
     end
     resources :members, only: [:create, :destroy]
